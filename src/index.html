@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <style>
+        fieldset {
+            width: 400px;
+        }
+
+        li {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <section>
+            <div>
+                <h1>ToDo List App</h1>
+            </div>
+        </section>
+    </header>
+    <main>
+        <section>
+            <fieldset>
+                <legend>状態選択</legend>
+                <input type="radio" name="status" id="dispAllTasksRadio" checked="checked">全て
+                <input type="radio" name="status" id="dispMainteTasksRadio">作業中
+                <input type="radio" name="status" id="dispCompeleteTasksRadio">完了
+            </fieldset>
+        </section>
+        <section>
+            <fieldset>
+                <legend>Todo一覧</legend>
+                <table>
+                    <thead>
+                        <th>ID</th>
+                        <th>コメント</th>
+                        <th>状態</th>
+                        <th>削除</th>
+                    </thead>
+                    <tbody id="dispTodoLists"></tbody>
+                </table>
+            </fieldset>
+        </section>
+        <section>
+            <fieldset>
+                <legend>新規タスクの追加</legend>
+                <input type="text" id="createTodoInput">
+                <button id="createTodoButton">追加</button>
+            </fieldset>
+        </section>
+        <section>
+            <div id="errMesssage"></div>
+        </section>
+    </main>
+    <script src="main.js"></script>
+</body>
+
+</html>
