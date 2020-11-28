@@ -5,8 +5,8 @@
  * @createTdInpt 登録Todoの入力
  * @dispTdLists  TodoListsの一覧表示
  */ 
-const createTdInpt = document.getElementById('create_Todo_Input');
-const dispTdLists = document.getElementById('disp_Todo_Lists');
+const createTdInpt = document.getElementById('create_todo_input');
+const dispTdLists = document.getElementById('disp_todo_lists');
 
 /**
  * Radio入力
@@ -18,19 +18,46 @@ const dispTdLists = document.getElementById('disp_Todo_Lists');
  * @createTdBtn Todoリスト新規作成
  */ 
 
-const dispAllTskRadio = document.getElementById('disp_All_Tasks_Radio');
-const dispMaintTskRadio = document.getElementById('disp_Mainte_Tasks_Radio');
-const dispCompTskRadio = document.getElementById('disp_Compelete_Tasks_Radio');
-const createTdBtn = document.getElementById('create_Todo_Button');
+const dispAllTskRadio = document.getElementById('disp_all_tasks_radio');
+const dispMaintTskRadio = document.getElementById('disp_mainte_tasks_radio');
+const dispCompTskRadio = document.getElementById('disp_compelete_tasks_radio');
+const createTdBtn = document.getElementById('create_todo_button');
 
 const todos = [];
 
-const createTdList = todo => {
+const createTdList = todo => { 
     const isValue = (element) => element === todo;
-    const id = todos.findIndex(isValue);
+    const id = todos.findIndex(isValue); //id生成
     console.log(todos.findIndex(isValue)); //indexチェック
-    const tdElements ='<tr><td id="todo_List_Id_' + id + '">' + id + '</td><td id="todo_List_Task">' + todos[id].content + '</td><td><button id="todo_Status_Button_' + id + '">' + todos[id].state + '</button></td> <td><button id="todo_Delete_Button_' + id + '">' + todos[id].delete + '</button></td></tr > '
-    dispTdLists.insertAdjacentHTML("beforeend", tdElements);
+
+    // タグ生成
+    const tdTableTr = document.createElement('tr');
+    const tdStatusTd = document.createElement('td');
+    const tdStatusBtn = document.createElement('button');
+    const tdDelTd = document.createElement('td');
+    const tdDelBtn = document.createElement('button');
+    tdStatusBtn.innerHTML = todos[id].state;
+    tdDelBtn.innerHTML = todos[id].delete;
+
+    const tdIdSpan = document.createElement('span');
+    tdIdSpan.innerHTML = id;
+    const tdIdSpanTd = document.createElement('td');
+    tdIdSpanTd.append(tdIdSpan);
+
+    const taskSpan = document.createElement('span');
+    const taskSpanTd = document.createElement('td');
+    taskSpan.innerText = todos[id].content;
+    taskSpanTd.append(taskSpan);
+    
+    tdStatusTd.appendChild(tdStatusBtn);
+    tdDelTd.appendChild(tdDelBtn);
+
+    tdTableTr.appendChild(tdIdSpanTd);
+    tdTableTr.appendChild(taskSpanTd);
+    tdTableTr.appendChild(tdStatusTd);
+    tdTableTr.appendChild(tdDelTd);
+
+    dispTdLists.appendChild(tdTableTr);
 }
 
 createTdBtn.addEventListener('click', () => {
