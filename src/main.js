@@ -25,58 +25,20 @@ const createTdBtn = document.getElementById('create_todo_button');
 
 const todos = []; // Todoを格納する配列
 
-const createTdList = todo => { 
-    const isValue = (element) => element === todo;
-    const id = todos.findIndex(isValue); //id生成
-    console.log(todos.findIndex(isValue)); //indexチェック
-
-    // タグ生成
-    const tdTableTr = document.createElement('tr');
-    const tdStatusTd = document.createElement('td');
-    const tdStatusBtn = document.createElement('button');
-    const tdDelTd = document.createElement('td');
-    const tdDelBtn = document.createElement('button');
-    tdStatusBtn.innerHTML = todos[id].state;
-    tdDelBtn.innerHTML = todos[id].delete;
-
-    const tdIdSpan = document.createElement('span');
-    tdIdSpan.innerHTML = id;
-    const tdIdSpanTd = document.createElement('td');
-    tdIdSpanTd.append(tdIdSpan);
-    
-    const taskSpan = document.createElement('span');
-    const taskSpanTd = document.createElement('td');
-    taskSpan.innerText = todos[id].content;
-    taskSpanTd.append(taskSpan);
-    
-    tdStatusTd.appendChild(tdStatusBtn);
-    tdDelTd.appendChild(tdDelBtn);
-    
-    tdTableTr.appendChild(tdIdSpanTd);
-    tdTableTr.appendChild(taskSpanTd);
-    tdTableTr.appendChild(tdStatusTd);
-    tdTableTr.appendChild(tdDelTd);
-    
-    dispTdLists.appendChild(tdTableTr);
-
-    deleteTodoList(tdDelBtn, id); // Todoの削除
-}
-
-const deleteTodoList = (tdDelBtn, id) => { 
-    tdDelBtn.addEventListener('click', () => { 
-        todos.splice(id, 1);
-        const deleteTd = tdDelBtn.closest('tr');
-        dispTdLists.removeChild(deleteTd);
-        const removedTdList = todos;
-        sortTdList(removedTdList);
-    })
-}
-
-const sortTdList = removedTdList => {
-    const lists = removedTdList
+const sortTdList = (createTdValue,removedTdValue) => {
+    let todosInput;
+    if (createTdValue) {
+        todosInput = createTdValue;
+    } else if (removedTdValue) {
+        todosInput = removedTdValue;
+    }
     dispTdLists.innerHTML = '';
-    for (let i = 0; i < removedTdList.length; i++) { 
-        let id = i;
+    Object.keys(todosInput).forEach((key, id) => {
+        // インプットセット
+        const todoId = id;
+        const todoContent = todosInput[key].content;
+        const todoState = todosInput[key].state;
+        const todoDelete = todosInput[key].delete;
 
         // タグ生成
         const tdTableTr = document.createElement('tr');
@@ -84,17 +46,17 @@ const sortTdList = removedTdList => {
         const tdStatusBtn = document.createElement('button');
         const tdDelTd = document.createElement('td');
         const tdDelBtn = document.createElement('button');
-        tdStatusBtn.innerHTML = lists[id].state;
-        tdDelBtn.innerHTML = lists[id].delete;
-
+        tdStatusBtn.innerHTML = todoState;
+        tdDelBtn.innerHTML = todoDelete;
+    
         const tdIdSpan = document.createElement('span');
-        tdIdSpan.innerHTML = id;
+        tdIdSpan.innerHTML = todoId;
         const tdIdSpanTd = document.createElement('td');
         tdIdSpanTd.append(tdIdSpan);
         
         const taskSpan = document.createElement('span');
         const taskSpanTd = document.createElement('td');
-        taskSpan.innerText = lists[id].content;
+        taskSpan.innerText = todoContent;
         taskSpanTd.append(taskSpan);
         
         tdStatusTd.appendChild(tdStatusBtn);
@@ -106,16 +68,25 @@ const sortTdList = removedTdList => {
         tdTableTr.appendChild(tdDelTd);
         
         dispTdLists.appendChild(tdTableTr);
+    
+        deleteTodoList(tdDelBtn, todoId); // Todoの削除
+    });
+}
 
-        deleteTodoList(tdDelBtn, id); // Todoの削除
-    }
+const deleteTodoList = (tdDelBtn, todoId) => { 
+    tdDelBtn.addEventListener('click', () => { 
+        todos.splice(todoId, 1);
+        const deleteTd = tdDelBtn.closest('tr');
+        dispTdLists.removeChild(deleteTd);
+        const removedTdValue = todos;
+        sortTdList(removedTdValue);
+    })
 }
 
 createTdBtn.addEventListener('click', () => {
     if (!createTdInpt.value) { 
     return;
     }
-    console.log(createTdInpt.value); //入力チェック
     const todo = {
         content: createTdInpt.value,
         state: '実行中',
@@ -123,5 +94,6 @@ createTdBtn.addEventListener('click', () => {
     };
     todos.push(todo);
     createTdInpt.value = '';
-    createTdList(todo);
+    let createTdValue = todos;
+    sortTdList(createTdValue);
 })
