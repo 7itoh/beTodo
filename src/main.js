@@ -25,12 +25,14 @@ const createTdBtn = document.getElementById('create_todo_button');
 
 const todos = []; // Todoを格納する配列
 
-const sortTdList = (createTdValue,removedTdValue) => {
+const sortTdList = (createTdValue,removedTdValue,stateTdValue) => {
     let todosInput;
     if (createTdValue) {
         todosInput = createTdValue;
     } else if (removedTdValue) {
         todosInput = removedTdValue;
+    } else if (stateTdValue) { 
+        todosInput = stateTdValue;
     }
     dispTdLists.innerHTML = '';
     Object.keys(todosInput).forEach((key, id) => {
@@ -70,6 +72,7 @@ const sortTdList = (createTdValue,removedTdValue) => {
         dispTdLists.appendChild(tdTableTr);
     
         deleteTodoList(tdDelBtn, todoId); // Todoの削除
+        changeStateTdList(tdStatusBtn, todoId); // Todoの状態変更
     });
 }
 
@@ -82,6 +85,18 @@ const deleteTodoList = (tdDelBtn, todoId) => {
         sortTdList(removedTdValue);
     })
 }
+
+const changeStateTdList = (tdStatusBtn, todoId) => {
+    const taskMaintMsg = '実行中';
+    const taskCompMsg = '完了';
+    let stateTdValue;
+    tdStatusBtn.addEventListener('click', () => { 
+        todos[todoId].state === '実行中' ? todos[todoId].state = taskCompMsg : todos[todoId].state = taskMaintMsg;
+        tdStatusBtn.innerHTML = todos[todoId].state;
+        stateTdValue = todos;
+        sortTdList(stateTdValue);
+    })
+} 
 
 createTdBtn.addEventListener('click', () => {
     if (!createTdInpt.value) { 
