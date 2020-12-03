@@ -28,11 +28,11 @@ const todos = []; // Todoを格納する配列
 const sortTdList = () => {
     dispTdLists.innerHTML = '';
     todos.forEach((key, id) => {
-        // インプットセット
+        // インプット設定
         const todoId = id;
-        const todoContent = todos[key].content;
-        const todoState = todos[key].state;
-        const todoDelete = todos[key].delete;
+        const todoContent = key.content;
+        const todoState = key.state;
+        const todoDelete = key.delete;
 
         // タグ生成
         const tdTableTr = document.createElement('tr');
