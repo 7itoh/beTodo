@@ -28,9 +28,14 @@
         <section>
             <fieldset>
                 <legend>状態選択</legend>
-                <input type="radio" name="status" id="disp_all_tasks_radio" checked="checked">全て
-                <input type="radio" name="status" id="disp_mainte_tasks_radio">作業中
-                <input type="radio" name="status" id="disp_complete_tasks_radio">完了
+                <form action="" name="change_disp_tasks_radio" id="change_disp_tasks_radio">
+                    <input type="radio" name="status" id="disp_all_tasks_radio" checked="checked">
+                    <label for="all">すべて</label>
+                    <input type="radio" name="status" id="disp_mainte_tasks_radio">
+                    <label for="mainte">作業中</label>
+                    <input type="radio" name="status" id="disp_complete_tasks_radio">
+                    <label for="complete">完了</label>
+                </form>
             </fieldset>
         </section>
         <section>

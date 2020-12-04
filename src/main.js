@@ -25,20 +25,14 @@ const createTdBtn = document.getElementById('create_todo_button');
 
 const todos = []; // Todoを格納する配列
 
-const sortTdList = (createTdValue,removedTdValue) => {
-    let todosInput;
-    if (createTdValue) {
-        todosInput = createTdValue;
-    } else if (removedTdValue) {
-        todosInput = removedTdValue;
-    }
+const sortTdList = () => {
     dispTdLists.innerHTML = '';
-    Object.keys(todosInput).forEach((key, id) => {
-        // インプットセット
+    todos.forEach((key, id) => {
+        // インプット設定
         const todoId = id;
-        const todoContent = todosInput[key].content;
-        const todoState = todosInput[key].state;
-        const todoDelete = todosInput[key].delete;
+        const todoContent = key.content;
+        const todoState = key.state;
+        const todoDelete = key.delete;
 
         // タグ生成
         const tdTableTr = document.createElement('tr');
@@ -70,6 +64,7 @@ const sortTdList = (createTdValue,removedTdValue) => {
         dispTdLists.appendChild(tdTableTr);
     
         deleteTodoList(tdDelBtn, todoId); // Todoの削除
+        changeStateTdList(tdStatusBtn, todoId); // Todoの状態変更
     });
 }
 
@@ -78,22 +73,34 @@ const deleteTodoList = (tdDelBtn, todoId) => {
         todos.splice(todoId, 1);
         const deleteTd = tdDelBtn.closest('tr');
         dispTdLists.removeChild(deleteTd);
-        const removedTdValue = todos;
-        sortTdList(removedTdValue);
+        sortTdList(todos);
     })
 }
 
-createTdBtn.addEventListener('click', () => {
-    if (!createTdInpt.value) { 
-    return;
-    }
-    const todo = {
-        content: createTdInpt.value,
-        state: '実行中',
-        delete: '削除',
-    };
-    todos.push(todo);
-    createTdInpt.value = '';
-    let createTdValue = todos;
-    sortTdList(createTdValue);
-})
+const changeStateTdList = (tdStatusBtn, todoId) => {
+    const taskMaintMsg = '実行中';
+    const taskCompMsg = '完了';
+    tdStatusBtn.addEventListener('click', () => { 
+        todos[todoId].state === '実行中' ? todos[todoId].state = taskCompMsg : todos[todoId].state = taskMaintMsg;
+        tdStatusBtn.innerHTML = todos[todoId].state;
+        sortTdList(todos);
+    })
+} 
+
+const createTdList = () => { 
+    createTdBtn.addEventListener('click', () => {
+        if (!createTdInpt.value) { 
+        return;
+        }
+        const todo = {
+            content: createTdInpt.value,
+            state: '実行中',
+            delete: '削除',
+        };
+        todos.push(todo);
+        createTdInpt.value = '';
+        sortTdList(todos);
+    })
+}
+
+createTdList();
