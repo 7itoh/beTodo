@@ -21,13 +21,15 @@ const dispTdLists = document.getElementById('disp_todo_lists');
  * Button入力
  * @const createTdBtn       Todoリスト新規作成
  */
+
 const changeDispTask = document.getElementById('change_disp_tasks_radio');
 const dispAllTskRadio = changeDispTask[0];
 const dispMaintTskRadio = changeDispTask[1];
 const dispCompTskRadio = changeDispTask[2];
+
 const createTdBtn = document.getElementById('create_todo_button');
 
-const todos = []; // Todoを格納する配列
+let todos = []; // Todoを格納する配列
 
 const filterTdList = () => {
     if (!todos) { 
@@ -60,6 +62,7 @@ const sortTdList = (filterTdValue) => {
     sortTdValue.forEach((todo, id) => {
         // インプット設定
         const todoId = id;
+        const todokeyId = todo.taskid;
         const todoContent = todo.content;
         const todoState = todo.state;
         const todoDelete = todo.delete;
@@ -93,16 +96,22 @@ const sortTdList = (filterTdValue) => {
         
         dispTdLists.appendChild(tdTableTr);
     
-        deleteTodoList(tdDelBtn, todoId); // Todoの削除
+        deleteTodoList(tdDelBtn, todokeyId); // Todoの削除
         changeStateTdList(tdStatusBtn, todoId); // Todoの状態変更
     });
 }
 
-const deleteTodoList = (tdDelBtn, todoId) => { 
-    tdDelBtn.addEventListener('click', () => { 
-        todos.splice(todoId, 1);
+const deleteTodoList = (tdDelBtn, todokeyId) => {
+    tdDelBtn.addEventListener('click', () => {
+        let filterTdValue = todos.filter(todo => {
+            return todo.taskid !== todokeyId;
+        })
+        todos = filterTdValue;
         const deleteTd = tdDelBtn.closest('tr');
         dispTdLists.removeChild(deleteTd);
+        if (dispMaintTskRadio.checked || dispCompTskRadio.checked) { 
+            return;
+        }
         sortTdList(todos);
     })
 }
@@ -110,23 +119,32 @@ const deleteTodoList = (tdDelBtn, todoId) => {
 const changeStateTdList = (tdStatusBtn, todoId) => {
     const taskMaintMsg = '実行中';
     const taskCompMsg = '完了';
-    tdStatusBtn.addEventListener('click', () => { 
+    tdStatusBtn.addEventListener('click', () => {
         todos[todoId].state === '実行中' ? todos[todoId].state = taskCompMsg : todos[todoId].state = taskMaintMsg;
         tdStatusBtn.innerHTML = todos[todoId].state;
-        sortTdList(todos);
+        if (dispAllTskRadio.checked) {
+            sortTdList(todos);
+        } else if (dispMaintTskRadio.checked || dispCompTskRadio.checked) { 
+            const changeStateTd = tdStatusBtn.closest('tr');
+            dispTdLists.removeChild(changeStateTd);
+        }
     })
-} 
+}
+
+let taskkeyId = 0;
 
 const createTdList = () => { 
     createTdBtn.addEventListener('click', () => {
         if (!createTdInpt.value) { 
         return;
-        }
+        };
         const todo = {
+            taskid: taskkeyId,
             content: createTdInpt.value,
             state: '実行中',
             delete: '削除',
         };
+        todo.taskid = taskkeyId++;
         todos.push(todo);
         createTdInpt.value = '';
         if (dispCompTskRadio.checked) {
