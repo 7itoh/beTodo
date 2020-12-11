@@ -103,7 +103,7 @@ const sortTdList = (filterTdValue) => {
 
 const deleteTodoList = (tdDelBtn, todokeyId) => {
     tdDelBtn.addEventListener('click', () => {
-        let filterTdValue = todos.filter(todo => {
+        const filterTdValue = todos.filter(todo => {
             return todo.taskid !== todokeyId;
         })
         todos = filterTdValue;
@@ -112,7 +112,8 @@ const deleteTodoList = (tdDelBtn, todokeyId) => {
         if (dispMaintTskRadio.checked || dispCompTskRadio.checked) { 
             return;
         }
-        sortTdList(todos);
+        // sortTdList(todos);
+        sortTdList(filterTdValue);
     })
 }
 
